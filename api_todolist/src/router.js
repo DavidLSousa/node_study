@@ -1,26 +1,14 @@
 import { Router } from 'express'
-
-import { PrismaClient } from '@prisma/client'
-const prisma = new PrismaClient()
+import tasksController from './controller/tasksController.js'
 
 const router = Router()
 
-router.get('/tasks', async (_, res) => {
-  const allTasks = await prisma.tasks.findMany()
+router.get('/tasks', tasksController.getAll)
 
-  return res.status(200).json(allTasks)
-})
+router.post('/tasks', tasksController.create)
 
-router.post('/tasks', async (req, res) => {
-  const { task } = req.body
+router.delete('/tasks/:id', tasksController.del)
 
-  await prisma.tasks.create({
-    data: {
-      task,
-    }
-  })
-
-  return res.status(200).json({ taskContent: task })
-})
+router.put('/tasks/:id', tasksController.edit)
 
 export default router
